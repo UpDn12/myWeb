@@ -1,6 +1,6 @@
 #include <iostream>
 using namespace std;
-int numeroFichas=0;
+
 //menu general
 int Menu(){
     int option;
@@ -20,7 +20,8 @@ struct tipoDatos{
     string tamanio;      // El tamaño en bytes
 };
 //primera opcion
-void AniadirDatos(tipoDatos datos[],int numeroFichas){
+int AniadirDatos(tipoDatos datos[],int numeroFicha){
+    int numeroFichas=numeroFicha;
     if(numeroFichas<1000){
         cout<<"Introduce el nombre del fichero: ";
         cin>>datos[numeroFichas].nombreFichero;
@@ -29,56 +30,67 @@ void AniadirDatos(tipoDatos datos[],int numeroFichas){
         while(stoi(datos[numeroFichas].tamanio)<0){
             cin>>datos[numeroFichas].tamanio;
         }
+        cout<<numeroFichas;
         numeroFichas++;
     }else{
         cout << "Máximo de fichas alcanzado (1000)!\n";
     }
+    return numeroFichas;
 }
 //segunda opcion
-void MostrarTodo(tipoDatos datos[],int numeroFichas){
-    for(int i; i<numeroFichas; i++){
+int MostrarTodo(tipoDatos datos[],int numeroFicha){
+    int numeroFichas=numeroFicha;
+    for(int i=0; i<numeroFichas+1; i++){
         cout<<"\nNombre: "<<datos[i].nombreFichero
             <<"\nTamanio: "<<datos[i].tamanio<<" kb";
     }
+    return numeroFichas;
 }
 //tercera opcion
-void MostarSegunTamanio(tipoDatos datos[],int numeroFichas, int tamanioAMostrar){
-    for(int i;i<numeroFichas;i++){
+int MostarSegunTamanio(tipoDatos datos[],int numeroFicha, int tamanioAMostrar){
+    int numeroFichas=numeroFicha;
+    for(int i=0;i<numeroFichas+1;i++){
         if(stoi(datos[i].tamanio)>=tamanioAMostrar){
             cout<<"\nNombre: "<<datos[i].nombreFichero
                 <<"\nTamanio: "<<datos[i].tamanio<<" kb";
         }
     }
+    return numeroFichas;
 }
 //cuarta opcion
-void DatosDeFichero(tipoDatos datos[],int numeroFichas, string ficheroAMostrar){
-    for(int i;i<numeroFichas;i++){
+int DatosDeFichero(tipoDatos datos[],int numeroFicha, string ficheroAMostrar){
+    int numeroFichas=numeroFicha;
+    for(int i=0;i<numeroFichas+1;i++){
         if(datos[i].nombreFichero==ficheroAMostrar){
             cout<<"\nNombre: "<<datos[i].nombreFichero
                 <<"\nTamanio: "<<datos[i].tamanio<<" kb";
         }
     }
+    return numeroFichas;
 }
 //quianta opcion
-void BuscaPorNombre(tipoDatos datos[],int numeroFichas, string ficheroAMostrar){
+int BuscaPorNombre(tipoDatos datos[],int numeroFicha, string ficheroAMostrar){
     string nombre;
     int length;
+    int numeroFichas=numeroFicha;
     length=ficheroAMostrar.length();
 
-    for(int i;i<numeroFichas;i++){
+    for(int i=0;i<numeroFichas+1;i++){
         nombre=datos[i].nombreFichero;
-        if(nombre[length]==ficheroAMostrar){// es un char solo devuelve un caracter
+        if(nombre.substr(0,length)==ficheroAMostrar){// es un char solo devuelve un caracter
             cout<<"\nNombre: "<<datos[i].nombreFichero
                 <<"\nTamanio: "<<datos[i].tamanio<<" kb";
         }
     }
+    return numeroFichas;
 }
 //sexta opcion
-void EliminarDatos(tipoDatos datos[],int numeroFichas,int EliminarDato){
+int EliminarDatos(tipoDatos datos[],int numeroFicha,int EliminarDato){
+    int numeroFichas=numeroFicha;
     if(EliminarDato<numeroFichas){
-        for(int i;i<numeroFichas;i++){
+        for(int i=0;i<numeroFichas+1;i++){
             if(i==EliminarDato){
-                for(int j=i;j<numeroFichas-1;j++){
+                for(int j=i;j<numeroFichas;j++){
                     datos[j].nombreFichero=datos[j+1].nombreFichero;
                     datos[j].tamanio=datos[j+1].tamanio;
                 }
@@ -88,11 +100,14 @@ void EliminarDatos(tipoDatos datos[],int numeroFichas,int EliminarDato){
     }else{
         cout << "ese dato no existe!!\n";
     }
+    numeroFichas--;
+    return numeroFichas;
 }
 main(){
     int i=0, tamanioAMostrar=0,EliminarDato=0;
+    int numeroFichas=0;
     tipoDatos datos[numeroFichas];
-    bool salir;
+    int salir=0;
     string textoAMostrar;
     //menu y pociones
     do
@@ -101,40 +116,44 @@ main(){
         {
         case 1:
             //o Mostrar la lista de todos los nombres.
-            AniadirDatos(datos,numeroFichas);
+            numeroFichas=AniadirDatos(datos,numeroFichas);
             break;
         case 2:
             //o Mostrar las personas de una cierta edad.
-            MostrarTodo(datos,numeroFichas);
+            numeroFichas=MostrarTodo(datos,numeroFichas);
             break;
         case 3:
             //Mostrar las personas cuya inicial sea la que el usuario indique.
             cout << "¿A partir de que tamaño quieres que te muestre? ";
             cin >> tamanioAMostrar;
-            MostarSegunTamanio(datos,numeroFichas,tamanioAMostrar);
+            numeroFichas=MostarSegunTamanio(datos,numeroFichas,tamanioAMostrar);
             break;
         case 4:
             //o Mostrar la lista de todos los nombres.
             cout << "¿De qué fichero quieres ver todos los datos?";
             cin >> textoAMostrar;
-            DatosDeFichero(datos,numeroFichas,textoAMostrar);
+            numeroFichas=DatosDeFichero(datos,numeroFichas,textoAMostrar);
             break;
         case 5:
             //o Mostrar las personas de una cierta edad.
             cout << "¿De qué nombre quieres ver todos los datos?";
             cin >> textoAMostrar;
-            BuscaPorNombre(datos,numeroFichas,textoAMostrar);
+            numeroFichas=BuscaPorNombre(datos,numeroFichas,textoAMostrar);
             break;
         case 6:
             //Mostrar las personas cuya inicial sea la que el usuario indique.
             cout << "¿que posicion del dato quiere elimar (desde el 1)?";
             cin >> EliminarDato;
-            EliminarDatos(datos,numeroFichas,EliminarDato);
+            numeroFichas=EliminarDatos(datos,numeroFichas,EliminarDato);
+            break;
+        case 7:
+            cout << "saliendo";
+            salir=7;
             break;
         default:
         //salir del programa
-            salir=false;
+            cout << "opcion no valida";
             break;
         }
-    } while (salir);
+    } while (salir!=7);
 }
