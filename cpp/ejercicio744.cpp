@@ -26,7 +26,7 @@ void AniadirDatos(tipoDatos datos[],int numeroFichas){
         cin>>datos[numeroFichas].nombreFichero;
         cout << "Introduce el tamaño en KB: ";
         cin>>datos[numeroFichas].tamanio;
-        while(datos[numeroFichas].tamanio<0){
+        while(stoi(datos[numeroFichas].tamanio)<0){
             cin>>datos[numeroFichas].tamanio;
         }
         numeroFichas++;
@@ -44,7 +44,7 @@ void MostrarTodo(tipoDatos datos[],int numeroFichas){
 //tercera opcion
 void MostarSegunTamanio(tipoDatos datos[],int numeroFichas, int tamanioAMostrar){
     for(int i;i<numeroFichas;i++){
-        if(stoi(dato[i].tamanio>=tamanioAMostrar)){
+        if(stoi(datos[i].tamanio)>=tamanioAMostrar){
             cout<<"\nNombre: "<<datos[i].nombreFichero
                 <<"\nTamanio: "<<datos[i].tamanio<<" kb";
         }
@@ -64,10 +64,10 @@ void BuscaPorNombre(tipoDatos datos[],int numeroFichas, string ficheroAMostrar){
     string nombre;
     int length;
     length=ficheroAMostrar.length();
-    nombre=datos[i].nombreFichero;
 
     for(int i;i<numeroFichas;i++){
-        if(nombre[length]==ficheroAMostrar){
+        nombre=datos[i].nombreFichero;
+        if(nombre[length]==ficheroAMostrar){// es un char solo devuelve un caracter
             cout<<"\nNombre: "<<datos[i].nombreFichero
                 <<"\nTamanio: "<<datos[i].tamanio<<" kb";
         }
