@@ -1,125 +1,83 @@
-/**Un programa que sea capaz de almacenar los datos de 50 personas: nombre, dirección, teléfono, edad (usando una tabla de      
-structs). Deberá ir pidiendo los datos uno por uno, hasta que un nombre se introduzca vacío (se pulse Intro sin teclear nada). Entonces deberá aparecer un menú que permita:
-o Mostrar la lista de todos los nombres.
-
-o Mostrar las personas de una cierta edad.
-
-o Mostrar las personas cuya inicial sea la que el usuario indique.
-
-o Salir del programa (lógicamente, este menú debe repetirse hasta que se escoja la opción de “salir”). */
+// Ejemplo 07.05:
+// Array con muchos struct y menu para manejarla
 #include <iostream>
+#include <string>
 using namespace std;
-//menu del programa
-int Menu(){
-    int option;
-    cout<<"1.) Mostrar la lista de todos los nombres\n"
-        <<"2.) Mostrar las personas de una cierta edad\n"
-        <<"3.) Mostrar las personas cuya inicial sea la que el usuario indique\n"
-        <<"4.) Salir del programa\n";
-    cin>>option;
-    return option;
-};
-//struct persona
-struct Persona
+struct tipoDatos
 {
-    string nombre;
-    string direcion;
-    string telefono;
-    string edad;
+    string nombreFich; // Nombre del fichero
+    long tamanyo;      // El tamaño en bytes
 };
-//o Mostrar la lista de todos los nombres.
-void ListNombres(Persona person[],int tamanioArray){
-    for (int i = 0; i < tamanioArray; i++)
-    {
-        cout<<"Persona "<<i+1<<": "<<person[i].nombre<<"\n";
-    }
-}
-//o Mostrar las personas de una cierta edad.
-void ListEdad(Persona person[],int tamanioArray,int edad){
-    for (int i = 0; i < tamanioArray; i++)
-    {
-        //verifica si la edad es la misma a la de buscar
-        if (stoi(person[i].edad)==edad)
-        {
-            cout<<"Persona "<<i+1<<":\n"
-                <<"\tNombre: "<<person[i].nombre
-                <<"\tEdad: "<<person[i].edad
-                <<"\tTelefono: "<<person[i].telefono
-                <<"\n";
-        }
-        
-    }
-}
-//Mostrar las personas cuya inicial sea la que el usuario indique.
-void ListInicial(Persona person[],int tamanioArray,char inicial){
-    string nombre;
-    for (int i = 0; i < tamanioArray; i++)
-    {
-        nombre=person[i].nombre;
-        //verifica si la inicial es igual a la de buscar
-        if (nombre[0]==inicial)
-        {
-            cout<<"Persona "<<i+1<<":\n"
-                <<"\tNombre: "<<person[i].nombre
-                <<"\tEdad: "<<person[i].edad
-                <<"\tTelefono: "<<person[i].telefono
-                <<"\n";
-        }
-    }
-}
+//variables generales
+int numeroFichas = 0; // Número de fichas que ya tenemos
+int i;                // Para bucles
+int opcion;           // La opcion del menu que elija el usuario
+string textoTemporal; // Para pedir datos al usuario
+int numeroTemporal;
 //main
-int main(int argc, char const *argv[])
+int main();
 {
-    Persona person[2];
-    int edad=0,i=0;
-    bool salir;
-    char inicial;
-    //pedir datos
-    while (i<2){
-        cout<<"nombre de la persona "<<i+1<<":\n";
-        getline(cin,person[i].nombre);
-        if (person[i].nombre.empty())
-        {
-            break;
-        }
-        cout<<"direcion de la persona "<<i+1<<":\n";
-        getline(cin,person[i].direcion);
-        cout<<"telefono de la persona "<<i+1<<":\n";
-        getline(cin,person[i].telefono);
-        cout<<"edad de la persona "<<i+1<<":\n";
-        getline(cin,person[i].edad);
-        i++;
-    }
-    //menu y pociones
+    tipoDatos *fichas = new tipoDatos[1000];
     do
     {
-        switch (Menu())
+        // Menu principal
+        cout << endl;
+        cout << "Escoja una opción:" << endl;
+        cout << "1.- Añadir datos de un nuevo fichero" << endl;
+        cout << "2.- Mostrar los nombres de todos los ficheros" << endl;
+        cout << "3.- Mostrar ficheros que sean de mas de un cierto tamaño" << endl;
+        cout << "4.- Ver datos de un fichero" << endl;
+        cout << "5.- Salir" << endl;
+        cin >> opcion;
+        // Hacemos una cosa u otra según la opción escogida
+        switch (opcion)
         {
-        case 1:
-            //o Mostrar la lista de todos los nombres.
-            ListNombres(person,i);
+        case 1:                      // Añadir un dato nuevo
+            if (numeroFichas < 1000) // Si queda hueco
+            {
+                cout << "Introduce el nombre del fichero: ";
+                cin >> fichas[numeroFichas].nombreFich;
+                cout << "Introduce el tamaño en KB: ";
+				getline(cin,fichas[numeroFichas].tamanyo);
+                while (fichas[numeroFichas].tamanyo<0){
+					getline(cin,fichas[numeroFichas].tamanyo);
+				}
+                numeroFichas++; // Y tenemos una ficha más
+            }
+            else // Si no hay hueco para más fichas, avisamos
+                cout << "Máximo de fichas alcanzado (1000)!" << endl;
             break;
-        case 2:
-            //o Mostrar las personas de una cierta edad.
-            cout<<"edades a buscar: ";
-            cin>>edad;
-            ListEdad(person,i,edad);
+        case 2: // Mostrar todos
+            for (i = 0; i < numeroFichas; i++)
+                cout << "Nombre: " << fichas[i].nombreFich
+                    << "; Tamaño: " << fichas[i].tamanyo
+                    << "Kb" << endl;
             break;
-        case 3:
-            //Mostrar las personas cuya inicial sea la que el usuario indique.
-            cout<<"inicial a buscar: ";
-            cin>>inicial;
-            ListInicial(person,i,inicial);
+        case 3: // Mostrar según el tamaño
+            cout << "¿A partir de que tamaño quieres que te muestre? ";
+            cin >> numeroTemporal;
+            for (i = 0; i < numeroFichas; i++)
+                if (fichas[i].tamanyo >= numeroTemporal)
+                    cout << "Nombre: " << fichas[i].nombreFich
+                        << "; Tamaño: " << fichas[i].tamanyo
+                        << " Kb" << endl;
             break;
-        default:
-        //salir del programa
-            salir=false;
+        case 4: // Ver todos los datos (pocos) de un fichero
+            cout << "¿De qué fichero quieres ver todos los datos?";
+            cin >> textoTemporal;
+            for (i = 0; i < numeroFichas; i++)
+                if (fichas[i].nombreFich == textoTemporal)
+                    cout<< "Nombre: " << fichas[i].nombreFich
+                        << "; Tamaño: " << fichas[i].tamanyo
+                        << " Kb" << endl;
+            break;
+        case 5: // Salir: avisamos de que salimos
+            cout << "Fin del programa" << endl;
+            break;
+        default: // Otra opcion: no válida
+            cout << "Opción desconocida!" << endl;
             break;
         }
-    } while (salir);
-    
-    
-    
-    
+    } while (opcion != 5); // Si la opcion es 5, terminamos
     return 0;
 }
