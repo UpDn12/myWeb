@@ -38,10 +38,10 @@ int main();
                 cout << "Introduce el nombre del fichero: ";
                 cin >> fichas[numeroFichas].nombreFich;
                 cout << "Introduce el tamaño en KB: ";
-				getline(cin,fichas[numeroFichas].tamanyo);
+		getline(cin,fichas[numeroFichas].tamanyo);
                 while (fichas[numeroFichas].tamanyo<0){
-					getline(cin,fichas[numeroFichas].tamanyo);
-				}
+			getline(cin,fichas[numeroFichas].tamanyo);
+		}
                 numeroFichas++; // Y tenemos una ficha más
             }
             else // Si no hay hueco para más fichas, avisamos
