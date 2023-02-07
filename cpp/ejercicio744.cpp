@@ -1,83 +1,140 @@
-// Ejemplo 07.05:
-// Array con muchos struct y menu para manejarla
 #include <iostream>
-#include <string>
 using namespace std;
-struct tipoDatos
-{
-    string nombreFich; // Nombre del fichero
-    long tamanyo;      // El tamaño en bytes
+int numeroFichas=0;
+//menu general
+int Menu(){
+    int option;
+    cout<<"1.- Añadir datos de un nuevo fichero\n"
+        <<"2.- Mostrar los nombres de todos los ficheros\n"
+        <<"3.- Mostrar ficheros que sean de mas de un cierto tamaño\n"
+        <<"4.- Ver datos de un fichero\n"
+        <<"5.- busca de datos\n"
+        <<"6.- eliminar datos de un nuevo fichero\n"
+        <<"7.- Salir\n";
+    cin>>option;
+    return option;
 };
-//variables generales
-int numeroFichas = 0; // Número de fichas que ya tenemos
-int i;                // Para bucles
-int opcion;           // La opcion del menu que elija el usuario
-string textoTemporal; // Para pedir datos al usuario
-int numeroTemporal;
-//main
-int main();
-{
-    tipoDatos *fichas = new tipoDatos[1000];
+//struct
+struct tipoDatos{
+    string nombreFichero; // Nombre del fichero
+    string tamanio;      // El tamaño en bytes
+};
+//primera opcion
+void AniadirDatos(tipoDatos datos[],int numeroFichas){
+    if(numeroFichas<1000){
+        cout<<"Introduce el nombre del fichero: ";
+        cin>>datos[numeroFichas].nombreFichero;
+        cout << "Introduce el tamaño en KB: ";
+        cin>>datos[numeroFichas].tamanio;
+        while(datos[numeroFichas].tamanio<0){
+            cin>>datos[numeroFichas].tamanio;
+        }
+        numeroFichas++;
+    }else{
+        cout << "Máximo de fichas alcanzado (1000)!\n";
+    }
+}
+//segunda opcion
+void MostrarTodo(tipoDatos datos[],int numeroFichas){
+    for(int i; i<numeroFichas; i++){
+        cout<<"\nNombre: "<<datos[i].nombreFichero
+            <<"\nTamanio: "<<datos[i].tamanio<<" kb";
+    }
+}
+//tercera opcion
+void MostarSegunTamanio(tipoDatos datos[],int numeroFichas, int tamanioAMostrar){
+    for(int i;i<numeroFichas;i++){
+        if(stoi(dato[i].tamanio>=tamanioAMostrar)){
+            cout<<"\nNombre: "<<datos[i].nombreFichero
+                <<"\nTamanio: "<<datos[i].tamanio<<" kb";
+        }
+    }
+}
+//cuarta opcion
+void DatosDeFichero(tipoDatos datos[],int numeroFichas, string ficheroAMostrar){
+    for(int i;i<numeroFichas;i++){
+        if(datos[i].nombreFichero==ficheroAMostrar){
+            cout<<"\nNombre: "<<datos[i].nombreFichero
+                <<"\nTamanio: "<<datos[i].tamanio<<" kb";
+        }
+    }
+}
+//quianta opcion
+void BuscaPorNombre(tipoDatos datos[],int numeroFichas, string ficheroAMostrar){
+    string nombre;
+    int length;
+    length=ficheroAMostrar.length();
+    nombre=datos[i].nombreFichero;
+
+    for(int i;i<numeroFichas;i++){
+        if(nombre[length]==ficheroAMostrar){
+            cout<<"\nNombre: "<<datos[i].nombreFichero
+                <<"\nTamanio: "<<datos[i].tamanio<<" kb";
+        }
+    }
+}
+//sexta opcion
+void EliminarDatos(tipoDatos datos[],int numeroFichas,int EliminarDato){
+    if(EliminarDato<numeroFichas){
+        for(int i;i<numeroFichas;i++){
+            if(i==EliminarDato){
+                for(int j=i;j<numeroFichas-1;j++){
+                    datos[j].nombreFichero=datos[j+1].nombreFichero;
+                    datos[j].tamanio=datos[j+1].tamanio;
+                }
+                break;
+            }
+        }
+    }else{
+        cout << "ese dato no existe!!\n";
+    }
+}
+main(){
+    int i=0, tamanioAMostrar=0,EliminarDato=0;
+    tipoDatos datos[numeroFichas];
+    bool salir;
+    string textoAMostrar;
+    //menu y pociones
     do
     {
-        // Menu principal
-        cout << endl;
-        cout << "Escoja una opción:" << endl;
-        cout << "1.- Añadir datos de un nuevo fichero" << endl;
-        cout << "2.- Mostrar los nombres de todos los ficheros" << endl;
-        cout << "3.- Mostrar ficheros que sean de mas de un cierto tamaño" << endl;
-        cout << "4.- Ver datos de un fichero" << endl;
-        cout << "5.- Salir" << endl;
-        cin >> opcion;
-        // Hacemos una cosa u otra según la opción escogida
-        switch (opcion)
+        switch (Menu())
         {
-        case 1:                      // Añadir un dato nuevo
-            if (numeroFichas < 1000) // Si queda hueco
-            {
-                cout << "Introduce el nombre del fichero: ";
-                cin >> fichas[numeroFichas].nombreFich;
-                cout << "Introduce el tamaño en KB: ";
-                getline(cin,fichas[numeroFichas].tamanyo);
-                while (fichas[numeroFichas].tamanyo<0){
-					getline(cin,fichas[numeroFichas].tamanyo);
-				}
-                numeroFichas++; // Y tenemos una ficha más
-            }
-            else // Si no hay hueco para más fichas, avisamos
-                cout << "Máximo de fichas alcanzado (1000)!" << endl;
+        case 1:
+            //o Mostrar la lista de todos los nombres.
+            AniadirDatos(datos,numeroFichas);
             break;
-        case 2: // Mostrar todos
-            for (i = 0; i < numeroFichas; i++)
-                cout << "Nombre: " << fichas[i].nombreFich
-                    << "; Tamaño: " << fichas[i].tamanyo
-                    << "Kb" << endl;
+        case 2:
+            //o Mostrar las personas de una cierta edad.
+            MostrarTodo(datos,numeroFichas);
             break;
-        case 3: // Mostrar según el tamaño
+        case 3:
+            //Mostrar las personas cuya inicial sea la que el usuario indique.
             cout << "¿A partir de que tamaño quieres que te muestre? ";
-            cin >> numeroTemporal;
-            for (i = 0; i < numeroFichas; i++)
-                if (fichas[i].tamanyo >= numeroTemporal)
-                    cout << "Nombre: " << fichas[i].nombreFich
-                        << "; Tamaño: " << fichas[i].tamanyo
-                        << " Kb" << endl;
+            cin >> tamanioAMostrar;
+            MostarSegunTamanio(datos,numeroFichas,tamanioAMostrar);
             break;
-        case 4: // Ver todos los datos (pocos) de un fichero
+        case 4:
+            //o Mostrar la lista de todos los nombres.
             cout << "¿De qué fichero quieres ver todos los datos?";
-            cin >> textoTemporal;
-            for (i = 0; i < numeroFichas; i++)
-                if (fichas[i].nombreFich == textoTemporal)
-                    cout<< "Nombre: " << fichas[i].nombreFich
-                        << "; Tamaño: " << fichas[i].tamanyo
-                        << " Kb" << endl;
+            cin >> textoAMostrar;
+            DatosDeFichero(datos,numeroFichas,textoAMostrar);
             break;
-        case 5: // Salir: avisamos de que salimos
-            cout << "Fin del programa" << endl;
+        case 5:
+            //o Mostrar las personas de una cierta edad.
+            cout << "¿De qué nombre quieres ver todos los datos?";
+            cin >> textoAMostrar;
+            BuscaPorNombre(datos,numeroFichas,textoAMostrar);
             break;
-        default: // Otra opcion: no válida
-            cout << "Opción desconocida!" << endl;
+        case 6:
+            //Mostrar las personas cuya inicial sea la que el usuario indique.
+            cout << "¿que posicion del dato quiere elimar (desde el 1)?";
+            cin >> EliminarDato;
+            EliminarDatos(datos,numeroFichas,EliminarDato);
+            break;
+        default:
+        //salir del programa
+            salir=false;
             break;
         }
-    } while (opcion != 5); // Si la opcion es 5, terminamos
-    return 0;
+    } while (salir);
 }
